@@ -8,14 +8,13 @@ void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await windowManager.ensureInitialized();
   WindowOptions windowOptions = const WindowOptions(
+      windowButtonVisibility: true,
       title: 'متابعة المعاملات',
       size: Size(1400, 800),
-      maximumSize: Size(2000, 1200),
       minimumSize: Size(1400, 800),
       center: true,
       backgroundColor: Colors.transparent,
-      skipTaskbar: true,
-      titleBarStyle: TitleBarStyle.hidden);
+      titleBarStyle: TitleBarStyle.normal);
   windowManager.waitUntilReadyToShow(windowOptions, () async {
     await windowManager.show();
     await windowManager.focus();

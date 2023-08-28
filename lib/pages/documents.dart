@@ -1,3 +1,4 @@
+import 'dart:io';
 import 'package:excel/excel.dart';
 import 'package:fluent_ui/fluent_ui.dart';
 import 'package:intl/intl.dart';
@@ -24,16 +25,33 @@ class _ShowDocumentsState extends State<ShowDocuments> with WindowListener {
 
   exportToExel() {
     print('-----exportToExel----');
+    if (tempList == null || tempList!.isEmpty) return;
     final excel = Excel.createExcel();
     final sheet = excel.sheets[excel.getDefaultSheet() as String];
-    sheet!.setColWidth(2, 50);
-    sheet.setColAutoFit(3);
+    // sheet!.setColWidth(2, 50);
+    sheet!.setColAutoFit(1);
+    sheet.cell(CellIndex.indexByColumnRow(columnIndex: 0, rowIndex: 0)).value = '-';
+    sheet.cell(CellIndex.indexByColumnRow(columnIndex: 1, rowIndex: 0)).value = 'الموضوع';
+    sheet.cell(CellIndex.indexByColumnRow(columnIndex: 2, rowIndex: 0)).value = "الجهة المعدة";
+    sheet.cell(CellIndex.indexByColumnRow(columnIndex: 3, rowIndex: 0)).value = "صادر الى";
+    sheet.cell(CellIndex.indexByColumnRow(columnIndex: 4, rowIndex: 0)).value = "تسديد قيد";
+    sheet.cell(CellIndex.indexByColumnRow(columnIndex: 5, rowIndex: 0)).value = "مكان الحفظ";
+    sheet.cell(CellIndex.indexByColumnRow(columnIndex: 6, rowIndex: 0)).value = "التاريخ";
+    // sheet.cell(CellIndex.indexByColumnRow(columnIndex: 0, rowIndex: 0)).cellStyle!.backgroundColor = Color("faf487");
 
-    sheet.cell(CellIndex.indexByColumnRow(columnIndex: 2, rowIndex: 3)).value = "TExt S tring";
-    sheet.cell(CellIndex.indexByColumnRow(columnIndex: 3, rowIndex: 4)).value =
-        "TExt S tringTExt S tringTExt S tringTExt S tringTExt S tringTExt S tring";
-    print(sheet.sheetName);
-    excel.save(fileName: 'Sheet1.xlsx');
+    for (var i = 0; i < tempList!.length; i++) {
+      var doc = tempList![i];
+      sheet.cell(CellIndex.indexByColumnRow(columnIndex: 0, rowIndex: i)).value = doc.id;
+      sheet.cell(CellIndex.indexByColumnRow(columnIndex: 1, rowIndex: i)).value = doc.description;
+      sheet.cell(CellIndex.indexByColumnRow(columnIndex: 2, rowIndex: i)).value = doc.from;
+      sheet.cell(CellIndex.indexByColumnRow(columnIndex: 3, rowIndex: i)).value = doc.to;
+      sheet.cell(CellIndex.indexByColumnRow(columnIndex: 4, rowIndex: i)).value = doc.replyFor;
+      sheet.cell(CellIndex.indexByColumnRow(columnIndex: 5, rowIndex: i)).value = doc.saveTo;
+      sheet.cell(CellIndex.indexByColumnRow(columnIndex: 6, rowIndex: i)).value =
+          DateFormat('dd/MM/yyyy').format(doc.createdAt);
+    }
+    final byte = excel.save(fileName: '’متابعة العاملات.xlsx');
+    File('معاملاتي.xlsx').writeAsBytes(byte!);
   }
 
   @override

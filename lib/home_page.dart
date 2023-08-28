@@ -38,42 +38,11 @@ class _HomePageState extends State<HomePage> with WindowListener {
   Widget build(BuildContext context) {
     return NavigationView(
       appBar: NavigationAppBar(
-        title: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            Text(
-              'متابعة المعاملات الواردة',
-              style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
-            ),
-            IconButton(
-                icon: Icon(
-                  FluentIcons.out_of_office,
-                  color: Colors.red,
-                  size: 20,
-                ),
-                onPressed: () => windowManager.destroy())
-          ],
+        title: Text(
+          'متابعة المعاملات الواردة',
+          style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
         ),
         automaticallyImplyLeading: false,
-        // actions: Container(
-        //   margin: const EdgeInsets.only(left: 20, top: 15),
-        //   child: OutlinedButton(
-        //     onPressed: () async {
-        //       final result = await showDialog(
-        //           context: context,
-        //           builder: (context) {
-        //             return const AddDocument();
-        //           });
-        //       if (result == true) {
-        //         // listOfAllDocuments = await SqlHelper.getAllDocumnets();
-        //         setState(() {});
-        //       }
-        //     },
-        //     // onPressed: () => SqlHelper.dropTable(),
-        //     style: ButtonStyle(shape: ButtonState.all(RoundedRectangleBorder(borderRadius: BorderRadius.circular(4)))),
-        //     child: const Text('صادر جديد'),
-        //   ),
-        // ),
       ),
       pane: NavigationPane(
           displayMode: PaneDisplayMode.compact,
