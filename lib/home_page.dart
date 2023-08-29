@@ -2,6 +2,7 @@ import 'package:fluent_ui/fluent_ui.dart';
 import 'package:save_docs/Repository/sql_helper.dart';
 import 'package:save_docs/models/doc_model.dart';
 import 'package:save_docs/pages/documents.dart';
+import 'package:save_docs/pages/documents_in.dart';
 import 'package:save_docs/pages/search.dart';
 import 'package:save_docs/widgets/add_doc.dart';
 import 'package:window_manager/window_manager.dart';
@@ -14,23 +15,17 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> with WindowListener {
-  List<DocumentModel>? listOfAllDocuments;
+  // List<DocumentModel>? listOfAllDocuments;
   @override
   void initState() {
     super.initState();
     windowManager.addListener(this);
-    // getAllDocs();
   }
 
   @override
   void dispose() {
     windowManager.removeListener(this);
     super.dispose();
-  }
-
-  getAllDocs() async {
-    listOfAllDocuments = await SqlHelper.getAllDocumnets();
-    setState(() {});
   }
 
   int curIndex = 0;
@@ -68,10 +63,13 @@ class _HomePageState extends State<HomePage> with WindowListener {
                       builder: (context) {
                         return const AddDocument();
                       });
-                  if (result == true) {
+                  if (result == 1) {
+                    curIndex = 2;
+                    setState(() {});
+                  } else if (result == 2) {
                     curIndex = 1;
                     setState(() {});
-                  }
+                  } else {}
                 },
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
@@ -82,6 +80,11 @@ class _HomePageState extends State<HomePage> with WindowListener {
                   ],
                 ),
               )),
+            ),
+            PaneItem(
+              icon: const Icon(FluentIcons.document_management),
+              title: const Text('المعاملات الواردة'),
+              body: const showDocumentsIn(),
             ),
             PaneItem(
               icon: const Icon(FluentIcons.document_management),

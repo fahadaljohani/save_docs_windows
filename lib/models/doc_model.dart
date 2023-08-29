@@ -10,6 +10,7 @@ class DocumentModel {
   final DateTime createdAt;
   final int? replyFor;
   final String? saveTo;
+  final String documentID;
   DocumentModel({
     this.id,
     required this.to,
@@ -19,6 +20,7 @@ class DocumentModel {
     required this.createdAt,
     this.replyFor,
     this.saveTo,
+    required this.documentID,
   });
 
   DocumentModel copyWith({
@@ -30,6 +32,7 @@ class DocumentModel {
     DateTime? createdAt,
     int? replyFor,
     String? saveTo,
+    String? documentID,
   }) {
     return DocumentModel(
       id: id ?? this.id,
@@ -40,6 +43,7 @@ class DocumentModel {
       createdAt: createdAt ?? this.createdAt,
       replyFor: replyFor ?? this.replyFor,
       saveTo: saveTo ?? this.saveTo,
+      documentID: documentID ?? this.documentID,
     );
   }
 
@@ -53,6 +57,7 @@ class DocumentModel {
       'createdAt': createdAt.millisecondsSinceEpoch,
       'replyFor': replyFor,
       'saveTo': saveTo,
+      'documentID': documentID,
     };
   }
 
@@ -66,6 +71,7 @@ class DocumentModel {
       createdAt: DateTime.fromMillisecondsSinceEpoch(map['createdAt'] as int),
       replyFor: map['replyFor'] != null ? map['replyFor'] as int : null,
       saveTo: map['saveTo'] != null ? map['saveTo'] as String : null,
+      documentID: map['documentID'] as String,
     );
   }
 
@@ -75,7 +81,7 @@ class DocumentModel {
 
   @override
   String toString() {
-    return 'DocumentModel(id: $id, to: $to, from: $from, description: $description, attachNumber: $attachNumber, createdAt: $createdAt, replyFor: $replyFor, saveTo: $saveTo)';
+    return 'DocumentModel(id: $id, to: $to, from: $from, description: $description, attachNumber: $attachNumber, createdAt: $createdAt, replyFor: $replyFor, saveTo: $saveTo, documentID: $documentID)';
   }
 
   @override
@@ -89,7 +95,8 @@ class DocumentModel {
         other.attachNumber == attachNumber &&
         other.createdAt == createdAt &&
         other.replyFor == replyFor &&
-        other.saveTo == saveTo;
+        other.saveTo == saveTo &&
+        other.documentID == documentID;
   }
 
   @override
@@ -101,6 +108,7 @@ class DocumentModel {
         attachNumber.hashCode ^
         createdAt.hashCode ^
         replyFor.hashCode ^
-        saveTo.hashCode;
+        saveTo.hashCode ^
+        documentID.hashCode;
   }
 }

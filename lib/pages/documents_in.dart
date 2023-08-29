@@ -7,18 +7,18 @@ import 'package:save_docs/models/doc_model.dart';
 import 'package:save_docs/widgets/add_doc.dart';
 import 'package:window_manager/window_manager.dart';
 
-class ShowDocuments extends StatefulWidget {
-  const ShowDocuments({super.key});
+class showDocumentsIn extends StatefulWidget {
+  const showDocumentsIn({super.key});
 
   @override
-  State<ShowDocuments> createState() => _ShowDocumentsState();
+  State<showDocumentsIn> createState() => _ShowDocumentsState();
 }
 
-class _ShowDocumentsState extends State<ShowDocuments> with WindowListener {
+class _ShowDocumentsState extends State<showDocumentsIn> with WindowListener {
   List<DocumentModel>? tempList = [];
   @override
   void initState() {
-    getDocuments();
+    getDocumentsIn();
     windowManager.addListener(this);
     super.initState();
   }
@@ -121,8 +121,8 @@ class _ShowDocumentsState extends State<ShowDocuments> with WindowListener {
     super.dispose();
   }
 
-  getDocuments() async {
-    tempList = await SqlHelper.getAllDocumnets();
+  getDocumentsIn() async {
+    tempList = await SqlHelper.getAllInDocumnets();
     if (!mounted) return;
     setState(() {});
   }
@@ -132,7 +132,7 @@ class _ShowDocumentsState extends State<ShowDocuments> with WindowListener {
 
   @override
   Widget build(BuildContext context) {
-    getDocuments();
+    getDocumentsIn();
     return tempList != null && tempList!.isNotEmpty
         ? Column(
             children: [
@@ -141,14 +141,14 @@ class _ShowDocumentsState extends State<ShowDocuments> with WindowListener {
                   child: Padding(
                       padding: const EdgeInsets.only(left: 20, bottom: 2, top: 10),
                       child: SizedBox(
-                        width: 90,
+                        width: 120,
                         child: Button(
                           onPressed: () => exportToExel(),
                           child: Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
                               Text(
-                                'تصدير',
+                                'تصدير الوارد',
                                 style: TextStyle(fontWeight: FontWeight.bold),
                               ),
                               const SizedBox(width: 5),
