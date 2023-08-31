@@ -66,6 +66,37 @@ CREATE TABLE $tableInName ('id' INTEGER PRIMARY KEY AUTOINCREMENT,'to' TEXT NOT 
     return List.generate(docs.length, (index) => DocumentModel.fromMap(docs[index]));
   }
 
+  static Future<List<DocumentModel>> getRepliedDocs() async {
+    final db = await getDatabase();
+//     final sql = '''
+// SELECT * FROM $tableToName
+// INNER JOIN $tableInName ON $tableInName.id = $tableToName.replyFor
+// WHERE $tableInName.id == $tableToName.replyFor
+// ORDER BY createdAt DESC;
+// ''';
+//     print(sql);
+//     final result = await db.rawQuery(sql);
+//     if (result.isNotEmpty) {
+//       return List.generate(result.length, (index) => DocumentModel.fromMap(result[index]));
+//     } else {
+//       return [];
+//     }
+    final results = await db.query(tableInName, orderBy: 'createdAt DESC', limit: 100);
+    final List<DocumentModel> repliedDocs = [];
+    if (results.isNotEmpty) {
+      for (var docIn in results) {
+        final docModel = DocumentModel.fromMap(docIn);
+        print('----docModel---');
+        print(docModel);
+        final docTo = await db.query(tableToName, where: 'replyFor = ?', whereArgs: [docModel.id], limit: 1);
+        repliedDocs.add(DocumentModel.fromMap(docTo.first));
+      }
+    }
+    print('----repliedDocs----');
+    print(repliedDocs);
+    return repliedDocs;
+  }
+
   static Future<int> dropTable() async {
     final db = await getDatabase();
     return await db.delete(tableToName);

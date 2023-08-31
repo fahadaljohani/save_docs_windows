@@ -3,6 +3,7 @@ import 'package:save_docs/Repository/sql_helper.dart';
 import 'package:save_docs/models/doc_model.dart';
 import 'package:save_docs/pages/documents.dart';
 import 'package:save_docs/pages/documents_in.dart';
+import 'package:save_docs/pages/monitor_docs.dart';
 import 'package:save_docs/pages/search.dart';
 import 'package:save_docs/widgets/add_doc.dart';
 import 'package:window_manager/window_manager.dart';
@@ -91,6 +92,8 @@ class _HomePageState extends State<HomePage> with WindowListener {
               title: const Text('المعاملات الصادرة'),
               body: const ShowDocuments(),
             ),
+            PaneItem(
+                icon: const Icon(FluentIcons.document_reply), title: const Text('معاملاتي'), body: const MonitorDocs()),
             PaneItem(icon: const Icon(FluentIcons.search), title: const Text('البحث'), body: const Search()),
             PaneItem(
                 icon: const Icon(FluentIcons.info),
