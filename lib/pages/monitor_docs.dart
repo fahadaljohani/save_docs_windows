@@ -1,10 +1,8 @@
-// import 'dart:io';
-// import 'package:excel/excel.dart';
 import 'package:fluent_ui/fluent_ui.dart';
 import 'package:intl/intl.dart';
 import 'package:save_docs/Repository/sql_helper.dart';
 import 'package:save_docs/models/doc_model.dart';
-import 'package:save_docs/widgets/add_doc.dart';
+import 'package:save_docs/widgets/showDialogDoc.dart';
 import 'package:window_manager/window_manager.dart';
 
 class MonitorDocs extends StatefulWidget {
@@ -15,6 +13,7 @@ class MonitorDocs extends StatefulWidget {
 }
 
 class _MonitorDocsState extends State<MonitorDocs> with WindowListener {
+  int x = 1;
   List<DocumentModel>? tempList = [];
   @override
   void initState() {
@@ -28,155 +27,261 @@ class _MonitorDocsState extends State<MonitorDocs> with WindowListener {
     super.dispose();
   }
 
-  getDocuments() async {
-    tempList = await SqlHelper.getRepliedDocs();
-    if (!mounted) return;
-    setState(() {});
-  }
-
   final style = TextStyle(fontSize: 12, color: Colors.grey[100], overflow: TextOverflow.ellipsis);
   final styleHeader = const TextStyle(fontSize: 17, fontWeight: FontWeight.w600, overflow: TextOverflow.ellipsis);
 
   @override
   Widget build(BuildContext context) {
-    getDocuments();
-    return tempList != null && tempList!.isNotEmpty
-        ? SingleChildScrollView(
-            child: Padding(
-              padding: const EdgeInsets.all(15.0),
-              child: Table(
-                columnWidths: const {
-                  0: FractionColumnWidth(0.03),
-                  1: FractionColumnWidth(0.45),
-                  // 2: FractionColumnWidth(0.11),
-                  // 2: FractionColumnWidth(0.11),
-                  3: FractionColumnWidth(0.07),
-                  6: FractionColumnWidth(0.07)
-                },
-                border: TableBorder.symmetric(
-                  outside: BorderSide.none,
-                ),
-                defaultVerticalAlignment: TableCellVerticalAlignment.middle,
-                children: [
-                  TableRow(
-                      decoration: BoxDecoration(
-                        color: Colors.grey[80],
-                      ),
-                      children: [
-                        const TableCell(
-                            child: Align(
-                          alignment: Alignment.bottomRight,
-                          child: Icon(
-                            FluentIcons.numbered_list,
-                            size: 10,
-                          ),
-                        )),
-                        TableCell(
-                            verticalAlignment: TableCellVerticalAlignment.middle,
-                            child: Text(
-                              'الموضوع',
-                              style: styleHeader,
-                            )),
-                        /*
-                      TableCell(
-                          verticalAlignment: TableCellVerticalAlignment.middle,
-                          child: Text(
-                            'الجهة المعدة',
-                            style: styleHeader,
-                          )), */
-                        TableCell(
-                            verticalAlignment: TableCellVerticalAlignment.middle,
-                            child: Text(
-                              'صادر للجهة ',
-                              style: styleHeader,
-                            )),
-                        TableCell(
-                            verticalAlignment: TableCellVerticalAlignment.middle,
-                            child: Text(
-                              'تسديد قيد ',
-                              style: styleHeader,
-                            )),
-                        TableCell(
-                            verticalAlignment: TableCellVerticalAlignment.middle,
-                            child: Text(
-                              'مكان الحفظ ',
-                              style: styleHeader,
-                            )),
-                        TableCell(
-                            verticalAlignment: TableCellVerticalAlignment.middle,
-                            child: Text(
-                              'بتاريخ',
-                              style: styleHeader,
-                            )),
-                        const TableCell(
-                            verticalAlignment: TableCellVerticalAlignment.middle, child: Icon(FluentIcons.more)),
-                      ]),
-                  ...List.generate(tempList!.length, (index) {
-                    final doc = tempList![index];
-                    return TableRow(
-                        decoration: BoxDecoration(color: index.isEven ? Colors.grey[20] : Colors.white),
+    print('----Monitor Documents rebuilds');
+
+    return
+        // FutureBuilder(
+        //   future: SqlHelper.getNotRepliedDocs(),
+        //   builder: (BuildContext context, AsyncSnapshot<List<DocumentModel>?> snapshot) {
+        //     if (snapshot.data != null && snapshot.hasData) {
+        //       return Padding(
+        //         padding: const EdgeInsets.all(15.0),
+        //         child: Column(
+        //           mainAxisAlignment: MainAxisAlignment.start,
+        //           children: [
+        //             Align(alignment: Alignment.bottomRight, child: Text('معاملات تم الرد عليها')),
+        //             Table(
+        //               columnWidths: const {
+        //                 0: FractionColumnWidth(0.03),
+        //                 1: FractionColumnWidth(0.45),
+        //                 3: FractionColumnWidth(0.07),
+        //               },
+        //               border: TableBorder.symmetric(
+        //                 outside: BorderSide.none,
+        //               ),
+        //               defaultVerticalAlignment: TableCellVerticalAlignment.middle,
+        //               children: [
+        //                 TableRow(
+        //                     decoration: BoxDecoration(
+        //                       color: Colors.grey[80],
+        //                     ),
+        //                     children: [
+        //                       const TableCell(
+        //                           child: Align(
+        //                         alignment: Alignment.bottomRight,
+        //                         child: Icon(
+        //                           FluentIcons.numbered_list,
+        //                           size: 10,
+        //                         ),
+        //                       )),
+        //                       TableCell(
+        //                           verticalAlignment: TableCellVerticalAlignment.middle,
+        //                           child: Text(
+        //                             'الموضوع',
+        //                             style: styleHeader,
+        //                           )),
+        //                       TableCell(
+        //                           verticalAlignment: TableCellVerticalAlignment.middle,
+        //                           child: Text(
+        //                             'صادر للجهة ',
+        //                             style: styleHeader,
+        //                           )),
+        //                       TableCell(
+        //                           verticalAlignment: TableCellVerticalAlignment.middle,
+        //                           child: Text(
+        //                             'تسديد قيد ',
+        //                             style: styleHeader,
+        //                           )),
+        //                       TableCell(
+        //                           verticalAlignment: TableCellVerticalAlignment.middle,
+        //                           child: Text(
+        //                             'مكان الحفظ ',
+        //                             style: styleHeader,
+        //                           )),
+        //                       TableCell(
+        //                           verticalAlignment: TableCellVerticalAlignment.middle,
+        //                           child: Text(
+        //                             'بتاريخ',
+        //                             style: styleHeader,
+        //                           )),
+        //                     ]),
+        //                 if (snapshot.data!.isNotEmpty)
+        //                   ...List.generate(snapshot.data!.length, (index) {
+        //                     DocumentModel documentModel = snapshot.data![index];
+        //                     return TableRow(
+        //                         decoration: BoxDecoration(color: index.isEven ? Colors.grey[20] : Colors.white),
+        //                         children: [
+        //                           TableCell(
+        //                               child: Text(
+        //                             documentModel.id.toString(),
+        //                             style: const TextStyle(fontSize: 10),
+        //                           )),
+        //                           TableCell(
+        //                               child: Text(
+        //                             documentModel.description,
+        //                             style: const TextStyle(fontSize: 14),
+        //                           )),
+        //                           /* TableCell(
+        //                       child: Text(
+        //                         documentModel.from,
+        //                         style: style,
+        //                       )),*/
+        //                           TableCell(child: Text(documentModel.to, style: style)),
+        //                           TableCell(
+        //                               child: Text(
+        //                                   documentModel.replyFor != null ? documentModel.replyFor.toString() : '',
+        //                                   style: style)),
+        //                           TableCell(child: Text(documentModel.saveTo ?? '', style: style)),
+        //                           TableCell(
+        //                               child: Text(DateFormat('yyyy/MM/dd', 'ar').format(documentModel.createdAt),
+        //                                   style: style)),
+        //                         ]);
+        //                   }),
+        //               ],
+        //             ),
+        //           ],
+        //         ),
+        //       );
+        //     } else if (snapshot.hasError) {
+        //       return Center(
+        //         child: Text(snapshot.error.toString()),
+        //       );
+        //     } else if (snapshot.connectionState == ConnectionState.waiting) {
+        //       return Center(
+        //         child: ProgressBar(),
+        //       );
+        //     } else if (snapshot.data == null) {
+        //       return Center(
+        //         child: Text('لا يوجد بيانات'),
+        //       );
+        //     } else {
+        //       return Center(
+        //         child: Text('خطاء غير معروف'),
+        //       );
+        //     }
+        //   },
+        // ),
+        // const SizedBox(height: 30),
+        FutureBuilder(
+      future: SqlHelper.getDocumentsWaitingToReply(),
+      builder: (BuildContext context, AsyncSnapshot<List<DocumentModel>?> snapshot) {
+        if (snapshot.data != null && snapshot.hasData) {
+          return Padding(
+            padding: const EdgeInsets.all(15.0),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.start,
+              children: [
+                Align(alignment: Alignment.bottomRight, child: Text('معاملات لم يتم الرد عليها')),
+                Table(
+                  columnWidths: const {
+                    0: FractionColumnWidth(0.03),
+                    1: FractionColumnWidth(0.45),
+                    3: FractionColumnWidth(0.07),
+                  },
+                  border: TableBorder.symmetric(
+                    outside: BorderSide.none,
+                  ),
+                  defaultVerticalAlignment: TableCellVerticalAlignment.middle,
+                  children: [
+                    TableRow(
+                        decoration: BoxDecoration(
+                          color: Colors.grey[80],
+                        ),
                         children: [
-                          TableCell(
-                              child: Text(
-                            doc.id.toString(),
-                            style: const TextStyle(fontSize: 10),
+                          const TableCell(
+                              child: Align(
+                            alignment: Alignment.bottomRight,
+                            child: Icon(
+                              FluentIcons.numbered_list,
+                              size: 10,
+                            ),
                           )),
                           TableCell(
+                              verticalAlignment: TableCellVerticalAlignment.middle,
                               child: Text(
-                            doc.description,
-                            style: const TextStyle(fontSize: 14),
-                          )),
-                          /* TableCell(
+                                'الموضوع',
+                                style: styleHeader,
+                              )),
+                          /*
+                        TableCell(
+                            verticalAlignment: TableCellVerticalAlignment.middle,
                             child: Text(
-                              doc.from,
-                              style: style,
-                            )),*/
-                          TableCell(child: Text(doc.to, style: style)),
-                          TableCell(child: Text(doc.replyFor != null ? doc.replyFor.toString() : '', style: style)),
-                          TableCell(child: Text(doc.saveTo ?? '', style: style)),
-                          TableCell(child: Text(DateFormat('yyyy/MM/dd', 'ar').format(doc.createdAt), style: style)),
+                              'الجهة المعدة',
+                              style: styleHeader,
+                            )), */
                           TableCell(
-                            child: DropDownButton(
-                                title: const Icon(
-                                  FluentIcons.more,
-                                  size: 10,
-                                ),
-                                items: [
-                                  MenuFlyoutItem(
-                                      text: const Text('تعديل'),
-                                      onPressed: () => showDialog(
-                                          context: context,
-                                          builder: (context) {
-                                            return AddDocument(
-                                              documentModel: doc,
-                                            );
-                                          }),
-                                      leading: const Icon(
-                                        FluentIcons.edit,
-                                        size: 10,
-                                      )),
-                                  MenuFlyoutItem(
-                                      text: const Text('حذف'),
-                                      onPressed: () async {
-                                        final result = await SqlHelper.deleteDocument(doc);
-                                        if (result != 0) {
-                                          tempList = await SqlHelper.getAllDocumnets();
-                                          setState(() {});
-                                        }
-                                      },
-                                      leading: Icon(
-                                        FluentIcons.delete,
-                                        color: Colors.red,
-                                        size: 10,
-                                      )),
-                                ]),
-                          ),
-                        ]);
-                  }),
-                ],
-              ),
+                              verticalAlignment: TableCellVerticalAlignment.middle,
+                              child: Text(
+                                'صادر للجهة ',
+                                style: styleHeader,
+                              )),
+                          TableCell(
+                              verticalAlignment: TableCellVerticalAlignment.middle,
+                              child: Text(
+                                'تسديد قيد ',
+                                style: styleHeader,
+                              )),
+                          TableCell(
+                              verticalAlignment: TableCellVerticalAlignment.middle,
+                              child: Text(
+                                'مكان الحفظ ',
+                                style: styleHeader,
+                              )),
+                          TableCell(
+                              verticalAlignment: TableCellVerticalAlignment.middle,
+                              child: Text(
+                                'بتاريخ',
+                                style: styleHeader,
+                              )),
+                        ]),
+                    ...List.generate(snapshot.data!.length, (index) {
+                      DocumentModel doc = snapshot.data![index];
+                      return TableRow(
+                          decoration: BoxDecoration(color: index.isEven ? Colors.grey[20] : Colors.white),
+                          children: [
+                            TableCell(
+                                child: Text(
+                              doc.id.toString(),
+                              style: const TextStyle(fontSize: 10),
+                            )),
+                            TableCell(
+                                child: GestureDetector(
+                              onDoubleTap: () => showDialog(
+                                  context: context, builder: (context) => ShowDialogDocument(documentModel: doc)),
+                              child: Text(
+                                doc.description,
+                                style: const TextStyle(fontSize: 14),
+                              ),
+                            )),
+                            /* TableCell(
+                              child: Text(
+                                doc.from,
+                                style: style,
+                              )),*/
+                            TableCell(child: Text(doc.to, style: style)),
+                            TableCell(child: Text(doc.replyFor != null ? doc.replyFor.toString() : '', style: style)),
+                            TableCell(child: Text(doc.saveTo ?? '', style: style)),
+                            TableCell(child: Text(DateFormat('yyyy/MM/dd', 'ar').format(doc.createdAt), style: style)),
+                          ]);
+                    }),
+                  ],
+                ),
+              ],
             ),
-          )
-        : const Center(child: Text('لا يوجد بيانات'));
+          );
+        } else if (snapshot.hasError) {
+          return Center(
+            child: Text(snapshot.error.toString()),
+          );
+        } else if (snapshot.connectionState == ConnectionState.waiting) {
+          return Center(
+            child: ProgressBar(),
+          );
+        } else if (snapshot.data == null) {
+          return Center(
+            child: Text('لا يوجد بيانات'),
+          );
+        } else {
+          return Center(
+            child: Text('خطاء غير معروف'),
+          );
+        }
+      },
+    );
   }
 }

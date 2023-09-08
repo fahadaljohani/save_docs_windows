@@ -5,6 +5,7 @@ import 'package:intl/intl.dart';
 import 'package:save_docs/Repository/sql_helper.dart';
 import 'package:save_docs/models/doc_model.dart';
 import 'package:save_docs/widgets/add_doc.dart';
+import 'package:save_docs/widgets/showDialogDoc.dart';
 import 'package:window_manager/window_manager.dart';
 
 class ShowDocuments extends StatefulWidget {
@@ -246,9 +247,13 @@ class _ShowDocumentsState extends State<ShowDocuments> with WindowListener {
                                   style: const TextStyle(fontSize: 10),
                                 )),
                                 TableCell(
-                                    child: Text(
-                                  doc.description,
-                                  style: const TextStyle(fontSize: 14),
+                                    child: GestureDetector(
+                                  onDoubleTap: () => showDialog(
+                                      context: context, builder: (context) => ShowDialogDocument(documentModel: doc)),
+                                  child: Text(
+                                    doc.description,
+                                    style: const TextStyle(fontSize: 14),
+                                  ),
                                 )),
                                 /* TableCell(
                                     child: Text(

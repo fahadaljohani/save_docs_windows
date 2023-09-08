@@ -5,6 +5,7 @@ import 'package:intl/intl.dart';
 import 'package:save_docs/Repository/sql_helper.dart';
 import 'package:save_docs/models/doc_model.dart';
 import 'package:save_docs/widgets/add_doc.dart';
+import 'package:save_docs/widgets/showDialogDoc.dart';
 import 'package:window_manager/window_manager.dart';
 
 class showDocumentsIn extends StatefulWidget {
@@ -127,7 +128,11 @@ class _ShowDocumentsState extends State<showDocumentsIn> with WindowListener {
     setState(() {});
   }
 
-  final style = TextStyle(fontSize: 12, color: Colors.grey[100], overflow: TextOverflow.ellipsis);
+  final style = TextStyle(
+    fontSize: 12,
+    color: Colors.grey[100],
+    overflow: TextOverflow.ellipsis,
+  );
   final styleHeader = const TextStyle(fontSize: 17, fontWeight: FontWeight.w600, overflow: TextOverflow.ellipsis);
 
   @override
@@ -136,9 +141,14 @@ class _ShowDocumentsState extends State<showDocumentsIn> with WindowListener {
     return tempList != null && tempList!.isNotEmpty
         ? Column(
             children: [
-              Align(
-                  alignment: Alignment.topLeft,
-                  child: Padding(
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text(
+                    'الوارد',
+                    style: const TextStyle(fontSize: 25, fontWeight: FontWeight.bold),
+                  ),
+                  Padding(
                       padding: const EdgeInsets.only(left: 20, bottom: 2, top: 10),
                       child: SizedBox(
                         width: 120,
@@ -163,7 +173,9 @@ class _ShowDocumentsState extends State<showDocumentsIn> with WindowListener {
                               border: ButtonState.all(BorderSide(color: Colors.black)),
                               backgroundColor: ButtonState.all(Colors.green.withOpacity(0.1))),
                         ),
-                      ))),
+                      )),
+                ],
+              ),
               Expanded(
                 child: SingleChildScrollView(
                   child: Padding(
@@ -174,8 +186,8 @@ class _ShowDocumentsState extends State<showDocumentsIn> with WindowListener {
                         1: FractionColumnWidth(0.45),
                         // 2: FractionColumnWidth(0.11),
                         // 2: FractionColumnWidth(0.11),
-                        3: FractionColumnWidth(0.07),
-                        6: FractionColumnWidth(0.07)
+                        // 3: FractionColumnWidth(0.07),
+                        // 6: FractionColumnWidth(0.07)
                       },
                       border: TableBorder.symmetric(
                         outside: BorderSide.none,
@@ -217,13 +229,13 @@ class _ShowDocumentsState extends State<showDocumentsIn> with WindowListener {
                               TableCell(
                                   verticalAlignment: TableCellVerticalAlignment.middle,
                                   child: Text(
-                                    'تسديد قيد ',
+                                    'مكان الحفظ ',
                                     style: styleHeader,
                                   )),
                               TableCell(
                                   verticalAlignment: TableCellVerticalAlignment.middle,
                                   child: Text(
-                                    'مكان الحفظ ',
+                                    'تم الرد',
                                     style: styleHeader,
                                   )),
                               TableCell(
@@ -246,9 +258,13 @@ class _ShowDocumentsState extends State<showDocumentsIn> with WindowListener {
                                   style: const TextStyle(fontSize: 10),
                                 )),
                                 TableCell(
-                                    child: Text(
-                                  doc.description,
-                                  style: const TextStyle(fontSize: 14),
+                                    child: GestureDetector(
+                                  onDoubleTap: () => showDialog(
+                                      context: context, builder: (context) => ShowDialogDocument(documentModel: doc)),
+                                  child: Text(
+                                    doc.description,
+                                    style: const TextStyle(fontSize: 14, overflow: TextOverflow.ellipsis),
+                                  ),
                                 )),
                                 /* TableCell(
                                     child: Text(
@@ -256,9 +272,8 @@ class _ShowDocumentsState extends State<showDocumentsIn> with WindowListener {
                                       style: style,
                                     )),*/
                                 TableCell(child: Text(doc.to, style: style)),
-                                TableCell(
-                                    child: Text(doc.replyFor != null ? doc.replyFor.toString() : '', style: style)),
                                 TableCell(child: Text(doc.saveTo ?? '', style: style)),
+                                TableCell(child: Text(doc.replyFor != null ? 'نعم' : 'لا', style: style)),
                                 TableCell(
                                     child: Text(DateFormat('yyyy/MM/dd', 'ar').format(doc.createdAt), style: style)),
                                 TableCell(
@@ -284,9 +299,9 @@ class _ShowDocumentsState extends State<showDocumentsIn> with WindowListener {
                                         MenuFlyoutItem(
                                             text: const Text('حذف'),
                                             onPressed: () async {
-                                              final result = await SqlHelper.deleteDocument(doc);
+                                              final result = await SqlHelper.deleteInDocument(doc);
                                               if (result != 0) {
-                                                tempList = await SqlHelper.getAllDocumnets();
+                                                tempList = await SqlHelper.getAllInDocumnets();
                                                 setState(() {});
                                               }
                                             },

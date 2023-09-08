@@ -10,8 +10,8 @@ void main() async {
   WindowOptions windowOptions = const WindowOptions(
       windowButtonVisibility: true,
       title: 'متابعة المعاملات',
-      size: Size(1400, 800),
-      minimumSize: Size(1400, 800),
+      size: Size(1400, 1000),
+      minimumSize: Size(1400, 1000),
       center: true,
       backgroundColor: Colors.transparent,
       titleBarStyle: TitleBarStyle.normal);

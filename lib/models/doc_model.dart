@@ -11,6 +11,7 @@ class DocumentModel {
   final int? replyFor;
   final String? saveTo;
   final String documentID;
+  final String? imageUrl;
   DocumentModel({
     this.id,
     required this.to,
@@ -21,6 +22,7 @@ class DocumentModel {
     this.replyFor,
     this.saveTo,
     required this.documentID,
+    this.imageUrl,
   });
 
   DocumentModel copyWith({
@@ -33,6 +35,7 @@ class DocumentModel {
     int? replyFor,
     String? saveTo,
     String? documentID,
+    String? imageUrl,
   }) {
     return DocumentModel(
       id: id ?? this.id,
@@ -44,6 +47,7 @@ class DocumentModel {
       replyFor: replyFor ?? this.replyFor,
       saveTo: saveTo ?? this.saveTo,
       documentID: documentID ?? this.documentID,
+      imageUrl: imageUrl ?? this.imageUrl,
     );
   }
 
@@ -58,6 +62,7 @@ class DocumentModel {
       'replyFor': replyFor,
       'saveTo': saveTo,
       'documentID': documentID,
+      'imageUrl': imageUrl,
     };
   }
 
@@ -72,6 +77,7 @@ class DocumentModel {
       replyFor: map['replyFor'] != null ? map['replyFor'] as int : null,
       saveTo: map['saveTo'] != null ? map['saveTo'] as String : null,
       documentID: map['documentID'] as String,
+      imageUrl: map['imageUrl'] != null ? map['imageUrl'] as String : null,
     );
   }
 
@@ -81,7 +87,7 @@ class DocumentModel {
 
   @override
   String toString() {
-    return 'DocumentModel(id: $id, to: $to, from: $from, description: $description, attachNumber: $attachNumber, createdAt: $createdAt, replyFor: $replyFor, saveTo: $saveTo, documentID: $documentID)';
+    return 'DocumentModel(id: $id, to: $to, from: $from, description: $description, attachNumber: $attachNumber, createdAt: $createdAt, replyFor: $replyFor, saveTo: $saveTo, documentID: $documentID, imageUrl: $imageUrl)';
   }
 
   @override
@@ -96,7 +102,8 @@ class DocumentModel {
         other.createdAt == createdAt &&
         other.replyFor == replyFor &&
         other.saveTo == saveTo &&
-        other.documentID == documentID;
+        other.documentID == documentID &&
+        other.imageUrl == imageUrl;
   }
 
   @override
@@ -109,6 +116,7 @@ class DocumentModel {
         createdAt.hashCode ^
         replyFor.hashCode ^
         saveTo.hashCode ^
-        documentID.hashCode;
+        documentID.hashCode ^
+        imageUrl.hashCode;
   }
 }
